@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0F153A">
+  <title>VECTRA // IP Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <div class="scanlines"></div>
+
+  <main class="shell">
+    <header class="topbar glass">
+      <div class="brand">
+        <div class="brand-orb"><span></span></div>
+        <div><div class="eyebrow">CYBER INTELLIGENCE</div><div class="brand-name">VECTRA<span>//</span>IP</div></div>
+      </div>
+      <div class="status"><i></i> SYSTEM ONLINE <b id="clock">--:--:--</b></div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">NETWORK RECONNAISSANCE / 01</div>
+        <h1>IP <em>INTELLIGENCE</em><br>VISUALIZED.</h1>
+        <p>Inspect publicly available network intelligence and project the result into a live 3D operations view.</p>
+      </div>
+      <div class="hero-metric glass"><span>LOOKUPS</span><strong id="lookupCount">{{ history|length }}</strong><small>LOCAL EVIDENCE LOG</small></div>
+    </section>
+
+    <section class="command glass">
+      <div class="command-label"><span class="pulse-dot"></span> TARGET ADDRESS</div>
+      <form id="lookupForm">
+        <div class="input-wrap"><span>›</span><input id="ipInput" autocomplete="off" placeholder="Enter IPv4 / IPv6 address" value="8.8.8.8"></div>
+        <button id="lookupBtn" type="submit"><span>ANALYZE</span><b>↗</b></button>
+      </form>
+      <div class="quick"><span>QUICK TARGETS</span><button data-ip="8.8.8.8">8.8.8.8</button><button data-ip="1.1.1.1">1.1.1.1</button><button data-ip="2001:4860:4860::8888">IPv6</button></div>
+    </section>
+
+    <section class="workspace">
+      <div class="globe-panel glass">
+        <div class="panel-head"><div><span class="eyebrow">LIVE TOPOLOGY</span><h2>GLOBAL NETWORK VIEW</h2></div><span class="live-pill"><i></i> LIVE</span></div>
+        <div id="globe"></div>
+        <div class="globe-overlay"><span>LAT <b id="lat">—</b></span><span>LON <b id="lon">—</b></span><span>NODE <b id="node">STANDBY</b></span></div>
+        <div id="globeHint" class="globe-hint">Awaiting target analysis</div>
+      </div>
+
+      <aside class="intel-panel">
+        <div class="intel-card glass main-intel">
+          <div class="panel-head"><div><span class="eyebrow">TARGET PROFILE</span><h2>NETWORK IDENTITY</h2></div><span id="typeBadge" class="type-badge">STANDBY</span></div>
+          <div class="target-ip" id="targetIp">8.8.8.8</div>
+          <div class="data-grid">
+            <div><span>HOSTNAME</span><strong id="hostname">—</strong></div>
+            <div><span>ASN</span><strong id="asn">—</strong></div>
+            <div><span>ORGANIZATION</span><strong id="org">—</strong></div>
+            <div><span>COUNTRY</span><strong id="country">—</strong></div>
+            <div><span>REGION</span><strong id="region">—</strong></div>
+            <div><span>CITY</span><strong id="city">—</strong></div>
+            <div><span>TIMEZONE</span><strong id="timezone">—</strong></div>
+            <div><span>ROUTABLE</span><strong id="routable">—</strong></div>
+          </div>
+        </div>
+
+        <div class="intel-card glass telemetry">
+          <div class="panel-head"><div><span class="eyebrow">SIGNAL MONITOR</span><h2>TELEMETRY</h2></div><span id="signal">IDLE</span></div>
+          <div class="bars" id="bars"></div>
+          <div class="telemetry-row"><span>PACKET PATH</span><b id="pathStatus">WAITING</b></div>
+          <div class="telemetry-row"><span>INTELLIGENCE</span><b id="intelStatus">READY</b></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="history glass">
+      <div class="panel-head"><div><span class="eyebrow">FORENSIC TRAIL</span><h2>RECENT LOOKUPS</h2></div><span>LOCAL SQLITE LOG</span></div>
+      <div class="history-table-wrap"><table><thead><tr><th>TIME (UTC)</th><th>IP</th><th>LOCATION</th><th>ORGANIZATION</th><th>ASN</th></tr></thead><tbody id="historyBody">
+      {% for row in history %}<tr><td>{{ row.queried_at }}</td><td><code>{{ row.ip }}</code></td><td>{{ row.city or '—' }}, {{ row.country or '—' }}</td><td>{{ row.org or '—' }}</td><td>{{ row.asn or '—' }}</td></tr>{% else %}<tr><td colspan="5" class="empty">No evidence records yet.</td></tr>{% endfor %}
+      </tbody></table></div>
+    </section>
+
+    <footer><span>VECTRA // EDUCATIONAL IP INTELLIGENCE</span><span>GEOLOCATION IS APPROXIMATE • NOT A PRECISE PHYSICAL TRACKER</span></footer>
+  </main>
+
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl@2.37.2/dist/globe.gl.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
